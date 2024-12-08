@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hacker Terminal</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            display: flex;
+            height: 100vh;
+            justify-content: center;
+            align-items: center;
+            place-items: center;
+            background-color: rgb(0, 0, 0);
+            color: rgb(23, 241, 7);
+            font-family: Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- 
+        Initializing Hacking...
+        Reading files...
+        Password files detected...
+        Sending all data to server...
+        Cleaning up...
+        dots must blink 
+     -->
+    <div class="display">
+
+    </div>
+
+    <script>
+
+
+        let push = async (item) => {
+            let t = await timeout()
+            let div = document.createElement("div")
+            document.body.getElementsByClassName("display")[0].append(div)
+            div.innerHTML = item;
+
+            let k = item
+            let h = document.body.getElementsByClassName("display")[0].lastElementChild
+            let count = 0;
+            
+           let inv= setInterval(() => {
+                if (count < 3) {
+                    h.innerHTML = k + ".";
+                    k = h.innerHTML
+                    count++
+                }
+                else {
+                    count = 0
+                    h.innerHTML = item
+                    k = item
+                }
+            }, 300);
+            setTimeout(() => {
+                clearInterval(inv)
+                h.innerHTML = item
+
+            }, t *1000);
+        }
+
+        let timeout = () => {
+            return new Promise((resolve, reject) => {
+                let time = 1 + Math.random() * 5;
+                setTimeout(() => {
+                    resolve(time);
+                }, time * 1000);
+            })
+
+        }
+        let main = async () => {
+            let text = ["Initializing Hacking",
+                "Reading files",
+                "Password files detected",
+                "Sending all data to server",
+                "Cleaning up"]
+
+            for (const item of text) {
+                await push(item);
+            }
+        }
+        main();
+
+
+    </script>
+
+
+</body>
+
+</html>
