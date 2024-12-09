@@ -13,43 +13,42 @@ function App() {
   const [check, setcheck] = useState("")
   const [priority, setpriority] = useState("")
   const [todo, setTodo] = useState("")
-  const [todos, setTodos] = useState([])
   const [completedtodos, setCtodos] = useState([])
+  const [todos, setTodos] = useState([])
   const savels = () => {
+    console.log(todos)
     localStorage.setItem("todos", JSON.stringify(todos))
+    console.log(localStorage.getItem("todos"))
   }
 
-  const handleAdd = () => {
-    setTodos([...todos, { id: uuidv4(), todo, isComplete: false, priority, delhover: false }])
+  const handleAdd = () => {    
+      setTodos((prevTodos) => {
+        const newTodo = { id: uuidv4(), todo, isComplete: false, priority, delhover: false };
+        const updatedTodos = [...prevTodos, newTodo];
+        localStorage.setItem("todos", JSON.stringify(updatedTodos)); // Save the updated state to localStorage
+        console.log(localStorage.getItem("todos"));
+        return updatedTodos; // Return the updated state
+      });
     setTodo("")
     setpriority("")
-    console.log(todos)
+    document.getElementById("prio").value = "None";
     savels()
   }
+
+
   const handleDelete = (e, id) => {
     let newtodos = todos.filter((item) => {
       return item.id !== id
-    })
-    setTodos(newtodos)
-    savels()
-
-  }
-  const handleEdit = (e, id) => {
-    let t = todos.filter(i => {
-      return i.id === id
-    })
-    setTodo(t[0].todo)
-    let newtodos = todos.filter(i => {
-      return i.id !== id
-    })
-    setTodos(newtodos)
+    }) 
+    setTodos((prevTodos) => {      
+      const updatedTodos = newtodos;
+      localStorage.setItem("todos", JSON.stringify(updatedTodos)); // Save the updated state to localStorage
+      console.log(localStorage.getItem("todos"));
+      return updatedTodos; // Return the updated state
+    });    
+    console.log(todos)
     savels()
   }
-  const handlechangetext = (e) => {
-    setTodo(e.target.value)
-
-  }
-  // const [delhover,changedel] =useState("False")
 
   const deletehover = (e, id) => {
     let index = todos.findIndex(item => {
@@ -58,10 +57,31 @@ function App() {
     let newtodos = [...todos];
     newtodos[index].delhover = !newtodos[index].delhover
     setTodos(newtodos)
+    
+  }
+
+  const handleEdit = (e, id) => {
+    let t = todos.filter(i => {
+      return i.id === id
+    })
+    setTodo(t[0].todo)
+    let newtodos = todos.filter(i => {
+      return i.id !== id
+    })
+    setTodos((prevTodos) => {
+      const updatedTodos = [...prevTodos, newtodos];
+      localStorage.setItem("todos", JSON.stringify(updatedTodos)); // Save the updated state to localStorage
+      console.log(localStorage.getItem("todos"));
+      return updatedTodos; // Return the updated state
+    });
     savels()
   }
-  const handlechangeprio = (e) => {
+  const handlechangetext = (e) => {
+    setTodo(e.target.value)
 
+  }
+  
+  const handlechangeprio = (e) => {
     setpriority(e.target.value)
   }
 
@@ -81,13 +101,15 @@ function App() {
   }
 
 
-
-
   useEffect(() => {
+    console.log(JSON.parse(localStorage.getItem('todos')))
     if (JSON.parse(localStorage.getItem('todos'))) {
       let todos = JSON.parse(localStorage.getItem('todos'))
       setTodos(todos)
+      console.log(todos)      
     }
+    else
+    {console.log(todos)}
   }, [])
   return (
     <>
